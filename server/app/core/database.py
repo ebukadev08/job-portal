@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Example .env value:
-# DATABASE_URL=mysql+pymysql://root:yourpassword@localhost:3306/lms_db
+# DATABASE_URL=mysql+pymysql://root:yourpassword@localhost:3306/job_portal
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
