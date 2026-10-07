@@ -32,4 +32,4 @@ class Application(Base):
 
     job = relationship("Job", back_populates="applications")
     seeker = relationship("User", back_populates="applications")
-    resume = relationship("Resume")
+    resume = relationship("Resume", back_populates="applications")
