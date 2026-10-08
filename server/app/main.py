@@ -12,8 +12,8 @@ from fastapi import FastAPI
 from app.core.database import engine
 from app.models import Base
 from app.routes import auth
-# from app.routes import companies
-# from app.routes import jobs
+from app.routes import company
+from app.routes import job
 # from app.routes import resumes
 # from app.routes import applications
 # from app.routes import saved_jobs
@@ -32,8 +32,8 @@ app = FastAPI(
 )
 
 app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
-# app.include_router(companies.router, prefix="/api/companies", tags=["Companies"])
-# app.include_router(jobs.router, prefix="/api/jobs", tags=["Jobs"])
+app.include_router(company.router, prefix="/api/companies", tags=["Companies"])
+app.include_router(job.router, prefix="/api/jobs", tags=["Jobs"])
 # app.include_router(resumes.router, prefix="/api/resumes", tags=["Resumes"])
 # app.include_router(applications.router, prefix="/api", tags=["Applications"])
 # app.include_router(saved_jobs.router, prefix="/api", tags=["Saved Jobs"])
