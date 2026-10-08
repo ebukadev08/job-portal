@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -9,13 +9,13 @@ from app.schemas.company import CompanyCreate, CompanyResponse, CompanyUpdate
 router = APIRouter()
 
 
-@router.post("", response_model=CompanyResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/create", response_model=CompanyResponse, status_code=status.HTTP_201_CREATED)
 def create_company(
     data: CompanyCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(require_role(UserRole.employer)),
 ):
-    print("Current user:", current_user)  # Debugging line to check the current user
+    print("Current user:", current_user.id, current_user.role)  # Debugging line to check the current user
     if current_user.company:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                             detail="You already have a company profile")
@@ -63,3 +63,16 @@ def get_company(company_id: int, db: Session = Depends(get_db)):
     if not company:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not found")
     return company
+
+@router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
+def delete_my_comapny(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_role(UserRole.employer))
+):
+    company = current_user.company
+    if not company:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="You have not created a company profile yet")
+    db.delete(company)
+    db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT, content=None)
